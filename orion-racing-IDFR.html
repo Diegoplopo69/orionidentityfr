@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orion Racing — Built for Maximum Velocity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(132, 67, 185, 0.2);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #632e96;
+            cursor: pointer;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-logo:hover {
+            color: #8243b9;
+        }
+
+        /* El logo que querías de vuelta en vez de letras */
+        .nav-logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #8243b9;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #8243b9;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background: rgba(255, 255, 255, 0.98);
+                padding: 2rem;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        /* HERO & BASIC ALIGNMENTS */
+        .hero {
+            display: flex;
+            justify-content: center;
+            /* Un "blanco más oscuro" (gris clarito perla con toque morado) para el fondo general de la pantalla */
+            background: linear-gradient(135deg, #f0ebf5 0%, #fdfcff 100%);
+            position: relative;
+            overflow: hidden;
+            margin-top: 70px;
+            padding: 6rem 2rem;
+            min-height: 100vh;
+
+            /* Ajustes para forzar a que el bloque borre los bordes blancos laterales de orilla a orilla */
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        /* Imagen de fondo del Hero reducida y difuminada elegantemente */
+        .hero-bg-wrapper {
+            position: absolute;
+            /* AQUÍ MUEVES LA IMAGEN: Modifica el porcentaje. 0% es al techo, 20% es más abajo */
+            top: 1%;
+            right: -5%;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 1;
+            /* Qué tan transparente se ve (0.0 a 1.0) */
+            opacity: 0.35;
+            pointer-events: none;
+            /* Máscara para que se desvanezca en los bordes como un círculo de luz */
+            -webkit-mask-image: radial-gradient(circle, black 30%, transparent 70%);
+            mask-image: radial-gradient(circle, black 30%, transparent 70%);
+        }
+
+        .hero-bg-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: left;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .hero-subtitle {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            color: #8243b9;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            color: #1a1a1a;
+        }
+
+        .hero-title span {
+            color: #8243b9;
+        }
+
+        .hero-description {
+            font-size: 1.3rem;
+            color: #666666;
+            margin-bottom: 4rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* LAYOUTS ROW (Para Trayectoria y Logros) */
+        .trayectoria-title,
+        .section-title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #1a1a1a;
+            margin-bottom: 2rem;
+        }
+
+        .trayectoria-title {
+            /* AQUÍ BAJAS LA TRAYECTORIA: Sube o baja este número (ej. 15rem, 5rem o 200px) para ajustarla */
+            margin-top: 15rem;
+        }
+
+        .trayectoria-title span,
+        .section-title span {
+            color: #8243b9;
+        }
+
+        .row-layout {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            background: rgba(132, 67, 185, 0.04);
+            padding: 2.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #8243b9;
+        }
+
+        .row-text {
+            flex: 1.2;
+        }
+
+        .row-text h3 {
+            font-size: 1.5rem;
+            color: #8243b9;
+            margin-bottom: 1rem;
+        }
+
+        .row-text p {
+            font-size: 1.1rem;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .row-img {
+            flex: 0.8;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .row-img img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            /* Color de fondo por si aún no pones imagen */
+            background-color: #f1eaff;
+            min-height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        /* GENERAL SECTIONS */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section.hidden {
+            display: none;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #666666;
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        /* NUESTRO AUTO A OSCURAS CON VIDEO */
+        .auto-section {
+            /* Forzar a que esta única sección abarque toda la pantalla de borde a borde */
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            /* El gradiente que pediste: empieza con un tono general oscuro y se funde hasta llegar al negro profundo puro abajo */
+            background: linear-gradient(180deg, #1b0a29 0%, #09030e 40%, #000000 100%);
+            color: #ffffff;
+            padding: 8rem 5%;
+        }
+
+        .auto-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .auto-section .section-title {
+            color: #ffffff;
+        }
+
+        .auto-section .section-subtitle {
+            color: #d1c4e9;
+            margin: 0 auto 3rem auto;
+        }
+
+        /* Centro de Atracción: El Video */
+        .video-showcase {
+            position: relative;
+            max-width: 900px;
+            margin: 4rem auto 6rem auto;
+            z-index: 10;
+        }
+
+        /* Gradiente de branding morado fuerte que brilla alrededor del video */
+        .video-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 105%;
+            height: 105%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(ellipse, #8243b9 0%, transparent 60%);
+            z-index: -1;
+            opacity: 0.9;
+            filter: blur(40px);
+        }
+
+        .video-showcase video {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(130, 67, 185, 0.5);
+            display: block;
+            background-color: #000;
+        }
+
+        /* Grid re-estilizado para oscuras, debajo del video */
+        .auto-grid-dark {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+
+        .spec-dark {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            /* Cristal muy fino */
+            border-left: 3px solid #8243b9;
+            border-radius: 4px;
+        }
+
+        .spec-dark .spec-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-dark .spec-description {
+            color: #b0a0c0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* GRID CARDS (Iniciativas & Partners) */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: rgba(132, 67, 185, 0.05);
+            border: 1px solid rgba(132, 67, 185, 0.2);
+            padding: 2rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        .card-description {
+            color: #666666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* TEAM */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .team-member {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(132, 67, 185, 0.05);
+            border: 1px solid rgba(132, 67, 185, 0.2);
+            border-radius: 4px;
+        }
+
+        .team-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #8243b9, #632e96);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ffffff;
+        }
+
+        .team-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .team-role {
+            font-size: 0.9rem;
+            color: #8243b9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* FOOTER */
+        footer {
+            background: rgba(132, 67, 185, 0.05);
+            border-top: 1px solid rgba(132, 67, 185, 0.2);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: #666666;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .trayectoria-title,
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .auto-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .row-layout {
+                flex-direction: column-reverse;
+            }
+
+            .row-img {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <nav>
+        <a class="nav-logo" onclick="showSection('inicio')">
+            <img src="LOGO 2026 3/1.png" alt="Orion Racing Logo">
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a onclick="showSection('inicio')" class="nav-link active">Inicio</a></li>
+            <li><a onclick="showSection('logros')" class="nav-link">Logros</a></li>
+            <li><a onclick="showSection('auto')" class="nav-link">Nuestro Auto</a></li>
+            <li><a onclick="showSection('iniciativas')" class="nav-link">Iniciativas</a></li>
+            <li><a onclick="showSection('equipo')" class="nav-link">Equipo</a></li>
+            <li><a onclick="showSection('partners')" class="nav-link">Partners</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- HERO / INICIO -->
+    <section id="inicio" class="hero fade-in">
+        <!-- Detalle de imagen de fondo sutil por la derecha -->
+        <div class="hero-bg-wrapper">
+            <img src="Fondoorion.jpg" alt="Fondo Difuminado">
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-subtitle">Tampico, Tamaulipas • STEM Racing</div>
+            <h1 class="hero-title">Impulsados por las<span> estrellas.</span></h1>
+            <p class="hero-description">Ingeniería. Precisión. Pasión.</p>
+
+            <h2 class="trayectoria-title">Nuestra <span>Trayectoria.</span></h2>
+
+            <!-- TRES LAYOUTS DE PÁRRAFO Y FOTO A LA DERECHA -->
+            <div class="row-layout">
+                <div class="row-text">
+                    <h3>El Inicio de una Era Regionales 2025</h3>
+                    <p>Nuestro rookie year comenzó con tres integrantes y una meta clara: ganar la regional.
+                        Con esfuerzo, aprendizaje constante y trabajo en equipo, transformamos esa idea en realidad.
+                        Al final, no solo logramos el mejor tiempo en pista, sino que dimos el primer paso en la
+                        historia de Orion consiguiendo nuestro primer P1 en STEM Racing.</p>
+                </div>
+                <div class="row-img">
+                    <img src="trofeo.JPG" alt="Esp">
+                </div>
+            </div>
+
+            <div class="row-layout">
+                <div class="row-text">
+                    <h3> Final Nacional 2025</h3>
+                    <p>Para la final nacional, el equipo creció y con nuevos integrantes llegó también una nueva
+                        ambición.
+                        Entre mejoras, llevamos nuestro auto a otro nivel. El resultado: el auto más veloz de México y
+                        un tercer lugar nacional.
+                        No fue una vuelta perfecta, pero sí una que nos puso en el mapa y confirmó que íbamos en serio.
+                    </p>
+                </div>
+                <div class="row-img">
+                    <img src="lololol.JPG" alt="Espacio para tu Foto 2">
+                </div>
+            </div>
+
+            <div class="row-layout">
+                <div class="row-text">
+                    <h3>Temporada 2026</h3>
+                    <p>Al mirar hacia el futuro de STEM Racing, nos enfrentamos a nuevos retos y oportunidades.
+                        Con nuestra participación en la categoría profesional, comienza una nueva etapa para Orion.
+                        Nuestros objetivos son claros: seguir evolucionando, impulsar la innovación y competir al más
+                        alto nivel, llevando cada vez más lejos lo que somos capaces de lograr.
+                    </p>
+                </div>
+                <div class="row-img">
+                    <img src="rename.jpeg" alt="Espacio para tu Foto 3">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- NUEVA SECCION: LOGROS -->
+    <section id="logros" class="hidden">
+        <h2 class="section-title">Nuestros <span>Logros.</span></h2>
+        <p class="section-subtitle">Las preseas y reconocimientos que demuestran la superioridad de nuestra ingeniería
+            en la pista.</p>
+
+        <!-- Tres cubos estructurados igual: Texto a la izquierda y Foto a la derecha -->
+        <div class="row-layout">
+            <div class="row-text">
+                <h3>1º Lugar Regional</h3>
+                <p>Describe en este espacio cómo fue la competencia regional. El esfuerzo, los tiempos en pista y lo que
+                    significó llevarse la copa antes del reto nacional. La victoria se forja en el garaje.</p>
+            </div>
+            <div class="row-img">
+                <img src="" alt="Foto Logro 1">
+            </div>
+        </div>
+
+        <div class="row-layout">
+            <div class="row-text">
+                <h3>3º Nacional 2025</h3>
+                <p>Escribe aquí detalles sobre la competencia nacional. El nivel de nuestros contrincantes y cómo
+                    aseguramos nuestro podio, consolidándonos como una de las principales escuderías de la temporada.
+                </p>
+            </div>
+            <div class="row-img">
+                <img src="" alt="Foto Logro 2">
+            </div>
+        </div>
+
+        <div class="row-layout">
+            <div class="row-text">
+                <h3>Autos Más Veloces MX</h3>
+                <p>El reconocimiento máximo a la parte de ingeniería mecánica. Relata aquí los récords de velocidad y
+                    fricción que rompió el diseño general de su monoplaza y la destreza empleada para lograrlo.</p>
+            </div>
+            <div class="row-img">
+                <img src="" alt="Foto Logro 3">
+            </div>
+        </div>
+    </section>
+
+    <!-- NUESTRO AUTO -->
+    <section id="auto" class="hidden auto-section">
+        <div class="auto-container">
+            <h2 class="section-title">Nuestro <span>Auto.</span></h2>
+            <p class="section-subtitle">Ingeniería de alto rendimiento en acción. Cada componente optimizado para
+                velocidad máxima.</p>
+
+            <!-- CONTENEDOR DEL VIDEO CON GRADIENTE MORADO -->
+            <div class="video-showcase">
+                <!-- Aura brillante detrás del video -->
+                <div class="video-glow"></div>
+                <!-- Reproductor (En el codigo "src=" mete el nombre o arrastra tu video) -->
+                <video autoplay loop muted playsinline controls>
+                    <source src="Orion_Animation def.mp4" type="video/mp4">
+                    Tu navegador no soporta el video.
+                </video>
+            </div>
+
+            <div class="auto-grid-dark">
+                <div class="spec-dark">
+                    <div class="spec-title">Engineered for Speed</div>
+                    <div class="spec-description">Diseño aerodinámico optimizado mediante CFD. Reducción de drag sin
+                        sacrificar estabilidad.</div>
+                </div>
+                <div class="spec-dark">
+                    <div class="spec-title">Minimal Weight. Maximum Rigidity</div>
+                    <div class="spec-description">Estructura de carbono y aluminio. Cada gramo cuenta en la pista.</div>
+                </div>
+                <div class="spec-dark">
+                    <div class="spec-title">Instant Response</div>
+                    <div class="spec-description">Sistema de suspensión adaptativo. Control total en cada curva.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INICIATIVAS -->
+    <section id="iniciativas" class="hidden">
+        <h2 class="section-title">Orion <span>Sports.</span></h2>
+        <p class="section-subtitle">Expandiendo nuestro ecosistema de alto rendimiento a otras disciplinas.</p>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-title">⚽ Fútbol</div>
+                <div class="card-description">Desarrollo de talento competitivo. Entrenamiento de élite con metodología
+                    Orion.</div>
+            </div>
+            <div class="card">
+                <div class="card-title">🎾 Tenis</div>
+                <div class="card-description">Formación de jugadores de alto rendimiento. Competencia nacional e
+                    internacional.</div>
+            </div>
+            <div class="card">
+                <div class="card-title">🏆 Excelencia</div>
+                <div class="card-description">Mismo estándar de disciplina y precisión que caracteriza a Orion Racing.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EQUIPO -->
+    <section id="equipo" class="hidden">
+        <h2 class="section-title">Nuestro <span>Equipo.</span></h2>
+        <p class="section-subtitle">Ingenieros, estrategas y competidores de élite. Juntos, dominamos la pista.</p>
+
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="team-avatar">OR</div>
+                <div class="team-name">Orion Racing</div>
+                <div class="team-role">Equipo Competitivo</div>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">EN</div>
+                <div class="team-name">Equipo Técnico</div>
+                <div class="team-role">Ingeniería</div>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">ES</div>
+                <div class="team-name">Estrategia</div>
+                <div class="team-role">Competencia</div>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">BR</div>
+                <div class="team-name">Branding</div>
+                <div class="team-role">Comunicación</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PARTNERS -->
+    <section id="partners" class="hidden">
+        <h2 class="section-title">Quiénes impulsan la <span>victoria.</span></h2>
+        <p class="section-subtitle">Nuestros partners son parte integral del sistema Orion Racing.</p>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-title">Patrocinadores Principales</div>
+                <div class="card-description">Apoyo integral en desarrollo, manufactura y competencia.</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Proveedores Tecnológicos</div>
+                <div class="card-description">Componentes de precisión, software de simulación, herramientas de
+                    análisis.</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Instituciones Académicas</div>
+                <div class="card-description">Colaboración en investigación, desarrollo de talento, validación.</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 4rem; text-align: center;">
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #1a1a1a;">¿Quieres unirte al legado?</h3>
+            <button
+                style="padding: 1rem 2.5rem; background: #8243b9; color: white; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 1.1rem;">Contactar
+                Partners</button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Orion Racing. Diseñado para dominar la pista.</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">Tampico, Tamaulipas • México</p>
+    </footer>
+
+    <!-- SCRIPT DE NAVEGACIÓN -->
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.remove('hidden');
+                selectedSection.classList.add('fade-in');
+                window.scrollTo(0, 0);
+            }
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            if (event && event.target && event.target.classList.contains('nav-link')) {
+                event.target.classList.add('active');
+            }
+
+            document.getElementById('navLinks').classList.remove('active');
+        }
+
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+    </script>
+</body>
+
+</html>
